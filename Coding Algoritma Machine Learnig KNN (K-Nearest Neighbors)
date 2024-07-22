@@ -1,0 +1,89 @@
+##1. Input Data
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import confusion_matrix, silhouette_score, classification_report
+from sklearn.preprocessing import MinMaxScaler
+import seaborn as sns
+
+##2. Data Understanding
+df = pd.read_csv('/content/dataseter.csv')
+df
+
+print('data shape : ', df.shape)
+
+df.info()
+
+df.describe()
+
+df.AGE.value_counts()
+
+df.GENDER.value_counts()
+
+sns.histplot(df.AGE)
+
+##3. Cleaning Data
+df.isnull().sum()
+
+df.duplicated().sum()
+
+##4. Exploraty Data Analysys (EDA)
+sns.set_theme(style='ticks')
+sns.countplot(y='LUNG_CANCER', data=df, palette='flare')
+plt.ylabel("Peluang Kanker Paru")
+plt.xlabel("Total / Jumlah")
+plt.show()
+
+sns.set_theme(style='darkgrid')
+sns.countplot(x='GENDER', data=df, palette='rocket')
+plt.ylabel("Jumlah")
+plt.xlabel("Jenis Kelamin (F=Perempuan, M=Laki-laki )")
+plt.show()
+
+##5. Data Preparation
+from sklearn.preprocessing import LabelEncoder
+
+label_encoder = LabelEncoder()
+
+df['GENDER'] = label_encoder.fit_transform(df['GENDER'])
+df['AGE'] = label_encoder.fit_transform(df['AGE'])
+df['SMOKING'] = label_encoder.fit_transform(df['SMOKING'])
+df['YELLOW_FINGERS'] = label_encoder.fit_transform(df['YELLOW_FINGERS'])
+df['ANXIETY'] = label_encoder.fit_transform(df['ANXIETY'])
+df['PEER_PRESSURE'] = label_encoder.fit_transform(df['PEER_PRESSURE'])
+df['CHRONIC_DISEASE'] = label_encoder.fit_transform(df['CHRONIC_DISEASE'])
+df['FATIGUE'] = label_encoder.fit_transform(df['FATIGUE'])
+df['ALLERGY'] = label_encoder.fit_transform(df['ALLERGY'])
+df['WHEEZING'] = label_encoder.fit_transform(df['WHEEZING'])
+df['COUGHING'] = label_encoder.fit_transform(df['COUGHING'])
+df['SHORTNESS_OF_BREATH'] = label_encoder.fit_transform(df['SHORTNESS_OF_BREATH'])
+df['SWALLOWING_DIFFICULTY'] = label_encoder.fit_transform(df['SWALLOWING_DIFFICULTY'])
+df['CHEST_PAIN'] = label_encoder.fit_transform(df['CHEST_PAIN'])
+df['LUNG_CANCER'] = label_encoder.fit_transform(df['LUNG_CANCER'])
+
+df.head()
+
+x = df.drop(columns = ['LUNG_CANCER'])
+y = df.LUNG_CANCER
+
+print("X : ", x.shape)
+print("Y : ", y.shape)
+
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size= 0.2, random_state=42)
+
+print(f"x_train : {x_train.shape}")
+print(f"y_train : {y_train.shape}")
+print(f"x_test : {x_test.shape}")
+print(f"y_test : {y_test.shape}")
+
+##6. Modeling
+knn = KNeighborsClassifier(n_neighbors=)
+knn.fit(x_train, y_train)
+
+y_pred = knn.predict(x_test)
+KNN_acc = accuracy_score(y_pred, y_test)
+
+print(classification_report(y_test, y_pred))
+print("Akurasi KNN : {:.2f}%" .format(KNN_acc*100))
